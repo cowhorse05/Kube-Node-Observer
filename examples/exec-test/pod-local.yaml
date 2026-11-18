@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kno-exec-test-local
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kno-exec-test-local
+spec:
+  restartPolicy: Never
+  containers:
+    - name: workload
+      image: kubenode-observer/exec-test:dev
+      imagePullPolicy: IfNotPresent
+      args:
+        - --iterations=30
+        - --interval=1s
+        - --child-exit-code=2

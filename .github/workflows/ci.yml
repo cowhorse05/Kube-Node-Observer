@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.22.x"
+          cache: true
+      - name: Test
+        run: go test ./...
+      - name: Experiment summary tests
+        run: python3 -m unittest discover -s hack -p '*_test.py'
+      - name: Build
+        run: make build
+
+  helm:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: azure/setup-helm@v5.0.1
+      - name: Lint and render chart
+        run: make helm-lint
+      - name: Chart unit tests
+        run: python3 -m unittest hack/helm_chart_test.py
+      - uses: helm/kind-action@v1.14.0
+        with:
+          cluster_name: kno-chart
+      - name: Kubernetes API smoke test
+        run: make helm-smoke

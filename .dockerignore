@@ -1,0 +1,10 @@
+.git
+.github
+artifacts
+bin
+dist
+log
+postman
+coverage.out
+*.log
+**/__pycache__

@@ -1,0 +1,66 @@
+# 支持矩阵与已知限制
+
+## v0.1.0 支持矩阵
+
+| 维度 | 已验证/支持 | 尚未支持 |
+| --- | --- | --- |
+| 架构 | Linux x86_64 | arm64、多架构发布物 |
+| 内核 | 6.6 WSL2，BTF、tracefs | 无 BTF 内核 |
+| cgroup | v2 | v1、混合层级 |
+| Kubernetes | Minikube 1.38.1 / Kubernetes 1.35.1 | 托管集群、多节点汇总 |
+| CRI | containerd 2.2.1 | CRI-O、Docker shim |
+| Runtime | runc 普通容器 | Kata、microVM、Guest process |
+| 观测 | exec/exit、CPU runtime、runqlat | 网络、文件、完整块 IO |
+| 输出 | 节点 HTTP API、CLI、Prometheus text | TLS、鉴权、中心化存储、Web UI |
+
+版本表表示实测边界，不代表代码主动拒绝相邻版本。换内核、Kubernetes 或 runtime 后，应先运行 `make check` 和完整 integration。
+
+## 真实集群环境验证（2026-11-18）
+
+在一台公司内部 dev 集群的节点上做了只读环境兼容性探测（**未部署 Agent**），确认 Agent 所需的内核能力齐备：
+
+| 能力 | 实测结果 |
+| --- | --- |
+| 内核 | 5.15.80（x86_64 发行内核） |
+| BTF | `/sys/kernel/btf/vmlinux` 存在（约 4.4 MB），`CONFIG_DEBUG_INFO_BTF=y`，CO-RE 可加载 |
+| cgroup | v2：`cgroup.controllers` 暴露 cpuset/cpu/io/memory/hugetlb/pids/rdma/misc |
+| CRI | containerd 1.7.27 |
+| KVM | 节点已有基于 KVM 的虚拟化工作负载 |
+
+节点内核与本地验证的 6.6 不同，但 BTF、cgroup v2、ringbuf 等硬性依赖均满足。
+
+这只是一次环境兼容性探测，证明"eBPF 程序可在该内核加载、所需特性齐备"；没有部署 Agent、没有跑完整采集链路，完整功能仍以本地 Minikube 验证为准。集群名称、节点标识与镜像仓库信息有意不写入本公开仓库。完整 Agent 部署需要把镜像推入内部镜像仓库并走内部 CI 发布流程，本项目未接入该流程，因此未在真实集群部署完整链路。
+
+独立研究扩展（不扩张以上 runc v0.1.0 指标语义）：已在同一 WSL2/Docker-driver Minikube 验证 Kata 4.3.1 **Go/QEMU**、Guest Linux 6.18.56、双容器共享 VM、Host shim/VMM 身份、官方 Monitor 与生命周期边界。M8 新增 QEMU 11.0.1 Host/VMM/vCPU 资源视图和同核竞争/恢复实验，见 [M8 指南](host-resources.md)。M9 在官方 debug Guest kernel 上验证独立特权 Probe、共享 Pod PID namespace 的 CPU/runqlat 和固定 Pod 网络 relay，见 [M9 指南](guest-probe.md)。默认 Guest kernel 缺能力，不支持直接加载；部分线程 runqlat 不当完整进程分布。尚未验证 runtime-rs/Cloud Hypervisor、多 VM 容量、生产安全部署或跨层时钟对齐。Go runtime 在上游 4.x 已弃用，选择与限制见 [Kata 指南](kata.md)。
+
+## 精度与一致性
+
+- M10a 只支持实验性的用户态 CLOCK_MONOTONIC 往返校准，输出条件 offset 区间和 exchange-only scope；不保证跨往返固定 offset、未来有效期、BPF 事件映射或同步窗口。time namespace unavailable 不当成已证明零 offset。见 [校准限制](clock-calibration.md)；
+- M10b 增加独立 BPF/用户态读钟诊断、子 namespace +2秒正对照和 opt-in 资源快照括号；实测相容不扩张为永久零偏移或未来漂移界，尚无跨域窗口重叠计算。见 [窗口限制](window-timing.md)；
+- CPU 使用率是最近约 1 秒窗口内的 runtime/wall time，不是长期平均值；多线程 workload 可以超过 100%；Pod/Container 使用独立 cgroup 累计量，Process 使用有限进程明细，二者不保证求和相等；
+- runqlat 的 P50/P95/P99 是微秒 log2 bucket 上界，不是精确分位数；
+- runqlat 起止 map 快照不是跨 map 原子事务，事件总数以 histogram delta 为准；
+- 同一时间只执行一个 runqlat 请求，避免大快照并发放大内存；
+- CRI 每 5 秒全量校正，短生命周期或刚创建容器可能短暂显示 unresolved；
+- 删除后的 cgroup 身份只保留 5 分钟 tombstone；生命周期事件内存环最多 4,096 条且不持久化；
+- LRU map 到达容量会淘汰旧 key，v0.1.0 不提供逐次淘汰计数。
+
+## 资源与安全
+
+- Agent 使用 privileged、hostPID、hostNetwork，并挂载 host procfs、cgroup v2、tracefs 和 containerd socket；只应部署到受信任的开发/研究集群；
+- HTTP API 当前无 TLS 和鉴权，Service 不应直接暴露到不可信网络；
+- 历史版本 128 MiB limit 下 40000 短进程回归无重启、CRI working set 约 101.6 MiB，仅作历史记录；当前版本的独立 1816s debug-off 观察完成 93 Pods /186000 子进程，末点 cgroup current 26.98 MiB、启动以来 peak 80.36 MiB，无重启/OOM，不代表长期生产保证；
+- 旧版 BPF map memlock 实测约 7.0 MiB；当前 CPU baseline 为每 CPU 一个 slot，进程明细 8192 entries，cgroup 累计量 1024 entries；cgroup 工作集超过容量仍可能淘汰/重置，不保证无限历史；
+- `/metrics` 从后台快照读取 map 占用，默认每次刷新完成后等待 15s；并发 census 是近似值，需结合 ready/age/error 判断有效性，过期值省略；
+- CPU 进程读取要求内核支持 hash/LRU batch lookup，当前只在表中内核验证；尚未支持的内核明确报错，不提供未经验证的降级路径。
+
+## 性能结论边界
+
+早期顺序 off/on 基准运行在共享的 WSL2/Minikube 2 vCPU 环境，5 轮中位数吞吐下降 3.67%、P99 为 26 us、Agent 用户态 CPU 为 2.353%，仅保留为历史记录。后续 12 CPU 环境的配对实验、metrics 优化和 BTF 内存诊断见实验指南及各日期报告，不混用不同版本、资源和顺序实验作性能承诺。
+
+后续验收与扩展顺序：
+
+1. 用已实现的成本分解和配对工具复测，不把 diagnostics 当业务开销基准；
+2. 对照调度器 runtime、cgroup 总量与有限进程明细，保留非原子读取和容量边界；
+3. debug-off 的 Pod/进程有限稳定性观察已完成，内存、身份、重启和事件丢失证据见 [收尾报告](../log/2026-10-26-cpu-accounting.md)，不作无限期保证；
+4. runc 收尾后进入 Kata 环境 Go/No-Go 与 Host/VMM 身份归属；不以扩充指标替代推进功能。

@@ -1,0 +1,9 @@
+/bin/
+/dist/
+/coverage.out
+/artifacts/
+/log/*
+!/log/*.md
+*.log
+__pycache__/
+

@@ -1,0 +1,18 @@
+apiVersion: v2
+name: kubenode-observer
+description: Runtime-aware Kubernetes diagnostics for runc and Kata Containers
+type: application
+version: 0.2.0
+appVersion: "0.4.0"
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/cowhorse05/KubeNode-Observer
+sources:
+  - https://github.com/cowhorse05/KubeNode-Observer
+keywords:
+  - ebpf
+  - kubernetes
+  - observability
+  - kata-containers
+  - containerd
+annotations:
+  artifacthub.io/license: Apache-2.0

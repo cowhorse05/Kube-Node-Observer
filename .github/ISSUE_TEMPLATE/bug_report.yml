@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible KubeNode-Observer problem
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the observed and expected behavior.
+    validations:
+      required: true
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime
+      options: [runc, Kata Containers, Mixed, Unknown]
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Kubernetes, kernel, containerd, Kata and KNO versions where applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Diagnostic evidence
+      description: Attach `kno doctor -o json`, relevant warnings and sanitized logs. Do not include secrets.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I removed credentials and sensitive workload data.
+          required: true

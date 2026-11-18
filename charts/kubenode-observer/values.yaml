@@ -1,0 +1,90 @@
+image:
+  repository: ghcr.io/cowhorse05/kubenode-observer
+  tag: main
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+rbac:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 18080
+  annotations: {}
+
+metrics:
+  prometheusAnnotations: true
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  additionalLabels: {}
+
+prometheusRule:
+  enabled: false
+  additionalLabels: {}
+
+grafanaDashboard:
+  enabled: false
+  labels:
+    grafana_dashboard: "1"
+  annotations: {}
+
+agent:
+  runtimeEndpoint: unix:///run/containerd/containerd.sock
+  hostProc: /host/proc
+  cgroupRoot: /host/sys/fs/cgroup
+  topologyInterval: 10s
+  cpuInterval: 1s
+  mapStatsInterval: 15s
+  kataMonitorEndpoint: ""
+  guestProbePort: 0
+  extraArgs: []
+
+hostPaths:
+  tracefs: /sys/kernel/tracing
+  runtimeSocket: /run/containerd/containerd.sock
+  proc: /proc
+  cgroup: /sys/fs/cgroup
+
+hostNetwork: true
+hostPID: true
+dnsPolicy: ClusterFirstWithHostNet
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext:
+  privileged: true
+  runAsUser: 0
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: true
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+priorityClassName: ""
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations:
+  - operator: Exists
+    effect: NoSchedule
+  - operator: Exists
+    effect: NoExecute
+affinity: {}
+terminationGracePeriodSeconds: 30

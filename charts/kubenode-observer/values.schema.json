@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "tag", "pullPolicy"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "tag": {"type": "string"},
+        "pullPolicy": {"enum": ["Always", "IfNotPresent", "Never"]}
+      }
+    },
+    "imagePullSecrets": {"type": "array", "items": {"type": "object"}},
+    "nameOverride": {"type": "string"},
+    "fullnameOverride": {"type": "string"},
+    "serviceAccount": {"type": "object"},
+    "rbac": {"type": "object"},
+    "service": {"type": "object"},
+    "metrics": {"type": "object"},
+    "serviceMonitor": {"type": "object"},
+    "prometheusRule": {"type": "object"},
+    "grafanaDashboard": {"type": "object"},
+    "agent": {"type": "object"},
+    "hostPaths": {"type": "object"},
+    "hostNetwork": {"type": "boolean"},
+    "hostPID": {"type": "boolean"},
+    "dnsPolicy": {"type": "string"},
+    "podAnnotations": {"type": "object"},
+    "podLabels": {"type": "object"},
+    "podSecurityContext": {"type": "object"},
+    "securityContext": {"type": "object"},
+    "resources": {"type": "object"},
+    "priorityClassName": {"type": "string"},
+    "nodeSelector": {"type": "object"},
+    "tolerations": {"type": "array"},
+    "affinity": {"type": "object"},
+    "terminationGracePeriodSeconds": {"type": "integer", "minimum": 0}
+  },
+  "required": ["image", "serviceAccount", "rbac", "service", "agent", "hostPaths"]
+}

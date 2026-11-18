@@ -1,0 +1,16 @@
+KubeNode-Observer is installed as a privileged DaemonSet.
+
+Check the rollout:
+  kubectl -n {{ .Release.Namespace }} rollout status daemonset/{{ include "kubenode-observer.fullname" . }}
+
+Forward the Agent API:
+  kubectl -n {{ .Release.Namespace }} port-forward service/{{ include "kubenode-observer.fullname" . }} 18080:{{ .Values.service.port }}
+
+Then run:
+  kno doctor --endpoint http://127.0.0.1:18080
+  kno inspect pod <pod> -n <namespace> --endpoint http://127.0.0.1:18080
+
+Optional existing-stack integrations:
+  --set serviceMonitor.enabled=true
+  --set prometheusRule.enabled=true
+  --set grafanaDashboard.enabled=true

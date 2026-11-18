@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "kubenode-observer.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "kubenode-observer.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "kubenode-observer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kubenode-observer.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.metrics.prometheusAnnotations }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: {{ .Values.service.port | quote }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "kubenode-observer.serviceAccountName" . }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      hostPID: {{ .Values.hostPID }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: agent
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          args:
+            - --listen=:{{ .Values.service.port }}
+            - --runtime-endpoint={{ .Values.agent.runtimeEndpoint }}
+            - --host-proc={{ .Values.agent.hostProc }}
+            - --cgroup-root={{ .Values.agent.cgroupRoot }}
+            - --topology-interval={{ .Values.agent.topologyInterval }}
+            - --cpu-interval={{ .Values.agent.cpuInterval }}
+            - --map-stats-interval={{ .Values.agent.mapStatsInterval }}
+            {{- with .Values.agent.kataMonitorEndpoint }}
+            - --kata-monitor={{ . }}
+            {{- end }}
+            {{- if gt (int .Values.agent.guestProbePort) 0 }}
+            - --guest-probe-port={{ .Values.agent.guestProbePort }}
+            {{- end }}
+            {{- range .Values.agent.extraArgs }}
+            - {{ . | quote }}
+            {{- end }}
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: tracefs
+              mountPath: /sys/kernel/tracing
+              readOnly: true
+            - name: runtime-socket
+              mountPath: {{ trimPrefix "unix://" .Values.agent.runtimeEndpoint }}
+            - name: host-proc
+              mountPath: {{ .Values.agent.hostProc }}
+              readOnly: true
+            - name: host-cgroup
+              mountPath: {{ .Values.agent.cgroupRoot }}
+              readOnly: true
+      volumes:
+        - name: tracefs
+          hostPath:
+            path: {{ .Values.hostPaths.tracefs }}
+            type: Directory
+        - name: runtime-socket
+          hostPath:
+            path: {{ .Values.hostPaths.runtimeSocket }}
+            type: Socket
+        - name: host-proc
+          hostPath:
+            path: {{ .Values.hostPaths.proc }}
+            type: Directory
+        - name: host-cgroup
+          hostPath:
+            path: {{ .Values.hostPaths.cgroup }}
+            type: Directory
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,52 @@
+{{- if .Values.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "kubenode-observer.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "kubenode-observer.labels" . | nindent 4 }}
+    {{- with .Values.prometheusRule.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: kubenode-observer
+      rules:
+        - alert: KubeNodeObserverLifecycleEventsLost
+          expr: increase(kno_agent_events_lost_total[5m]) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: KubeNode-Observer lost lifecycle events
+            description: The eBPF ring buffer reported dropped lifecycle events. Pod process history may be incomplete.
+            runbook_url: https://github.com/cowhorse05/KubeNode-Observer/blob/main/docs/metrics.md#lifecycle-events-lost
+        - alert: KubeNodeObserverTopologyUnavailable
+          expr: kno_topology_snapshot_ready == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: KubeNode-Observer topology is unavailable
+            description: The cached Kubernetes/CRI identity snapshot is missing, stale or failing on this Agent.
+            runbook_url: https://github.com/cowhorse05/KubeNode-Observer/blob/main/docs/metrics.md#topology-unavailable
+        - alert: KubeNodeObserverCPUSnapshotUnavailable
+          expr: kno_runtime_cpu_snapshot_ready == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: KubeNode-Observer CPU snapshot is unavailable
+            description: The background eBPF CPU snapshot is not ready or its last collection failed.
+            runbook_url: https://github.com/cowhorse05/KubeNode-Observer/blob/main/docs/metrics.md#cpu-snapshot-unavailable
+        - alert: KubeNodeObserverBPFMapStatsUnavailable
+          expr: kno_agent_bpf_map_stats_ready == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: KubeNode-Observer BPF map statistics are unavailable
+            description: A cached BPF map census is missing or stale. Scrapes do not scan maps directly.
+            runbook_url: https://github.com/cowhorse05/KubeNode-Observer/blob/main/docs/metrics.md#bpf-map-statistics-unavailable
+{{- end }}
