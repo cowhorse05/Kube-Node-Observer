@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/clockdomain"
-	"github.com/cowhorse05/KubeNode-Observer/internal/runqlat"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/clockdomain"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/runqlat"
 )
 
 const Path = "/api/v1/guest/resources"

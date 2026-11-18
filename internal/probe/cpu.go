@@ -11,7 +11,7 @@ import (
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
-	"github.com/cowhorse05/KubeNode-Observer/internal/bpfgen"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/bpfgen"
 )
 
 const cpuCommLen = 16

@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 type fakeResolver struct {

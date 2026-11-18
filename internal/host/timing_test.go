@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/clockdomain"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/clockdomain"
 )
 
 type timingSource struct {

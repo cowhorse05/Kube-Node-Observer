@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
-	"github.com/cowhorse05/KubeNode-Observer/internal/telemetry"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/telemetry"
 )
 
 type mapSample struct {

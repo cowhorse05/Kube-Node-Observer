@@ -16,12 +16,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/agent"
-	"github.com/cowhorse05/KubeNode-Observer/internal/cpu"
-	eventstore "github.com/cowhorse05/KubeNode-Observer/internal/event"
-	"github.com/cowhorse05/KubeNode-Observer/internal/guest"
-	"github.com/cowhorse05/KubeNode-Observer/internal/host"
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/agent"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/cpu"
+	eventstore "github.com/cowhorse05/Kube-Node-Observer/internal/event"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/guest"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/host"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 const (

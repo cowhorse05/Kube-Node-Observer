@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/diagnosis"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/diagnosis"
 	"github.com/spf13/cobra"
 )
 

@@ -3,8 +3,8 @@ package cpu
 import (
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
-	"github.com/cowhorse05/KubeNode-Observer/internal/telemetry"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/telemetry"
 )
 
 // TimedSource distinguishes diagnostic scans from production sampling.

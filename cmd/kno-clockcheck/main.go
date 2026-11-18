@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/cilium/ebpf/rlimit"
-	"github.com/cowhorse05/KubeNode-Observer/internal/clockdomain"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/clockdomain"
 	"golang.org/x/sys/unix"
 )
 

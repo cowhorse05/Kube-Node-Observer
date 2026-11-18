@@ -7,8 +7,8 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/cpu"
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/cpu"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 type TopologySource interface {

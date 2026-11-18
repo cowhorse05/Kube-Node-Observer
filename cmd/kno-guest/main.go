@@ -15,8 +15,8 @@ import (
 
 	"github.com/cilium/ebpf/btf"
 	"github.com/cilium/ebpf/rlimit"
-	"github.com/cowhorse05/KubeNode-Observer/internal/guest"
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/guest"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
 )
 
 func main() {

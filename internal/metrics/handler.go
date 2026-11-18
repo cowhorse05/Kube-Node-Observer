@@ -13,8 +13,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/agent"
-	"github.com/cowhorse05/KubeNode-Observer/internal/telemetry"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/agent"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/telemetry"
 )
 
 type HealthSource interface {

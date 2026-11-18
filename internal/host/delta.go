@@ -5,8 +5,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
-	"github.com/cowhorse05/KubeNode-Observer/internal/runqlat"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/runqlat"
 )
 
 func cpuDelta(accounting string, before, after uint64, window time.Duration) (*CPU, error) {

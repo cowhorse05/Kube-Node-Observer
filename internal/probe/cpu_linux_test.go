@@ -9,7 +9,7 @@ import (
 
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/rlimit"
-	"github.com/cowhorse05/KubeNode-Observer/internal/bpfgen"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/bpfgen"
 )
 
 // Deliberately do not poll while children run: a bounded process map cannot

@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/experiment"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/experiment"
 )
 
 func main() {

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
 )
 
 type batchSource struct {

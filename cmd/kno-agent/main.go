@@ -17,16 +17,16 @@ import (
 
 	"github.com/cilium/ebpf/btf"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/agent"
-	"github.com/cowhorse05/KubeNode-Observer/internal/cpu"
-	eventstore "github.com/cowhorse05/KubeNode-Observer/internal/event"
-	"github.com/cowhorse05/KubeNode-Observer/internal/guest"
-	"github.com/cowhorse05/KubeNode-Observer/internal/host"
-	"github.com/cowhorse05/KubeNode-Observer/internal/metrics"
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
-	"github.com/cowhorse05/KubeNode-Observer/internal/runqlat"
-	"github.com/cowhorse05/KubeNode-Observer/internal/telemetry"
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/agent"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/cpu"
+	eventstore "github.com/cowhorse05/Kube-Node-Observer/internal/event"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/guest"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/host"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/metrics"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/runqlat"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/telemetry"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 func main() {

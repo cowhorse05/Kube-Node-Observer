@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 var clockID = ClockIdentity{BootID: "00112233-4455-6677-8899-aabbccddeeff", TimeNamespace: "time:[123]"}

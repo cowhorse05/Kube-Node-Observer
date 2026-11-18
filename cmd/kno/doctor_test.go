@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/agent"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/agent"
 )
 
 func TestDoctorHealthyNode(t *testing.T) {

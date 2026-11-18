@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/telemetry"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/telemetry"
 )
 
 type Collector struct {

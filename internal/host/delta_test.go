@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/probe"
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/probe"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 func fixture() (ProcessView, ProcessView, probe.CPUSnapshot, probe.CPUSnapshot, []probe.RunQLatHistogram, []probe.RunQLatHistogram) {

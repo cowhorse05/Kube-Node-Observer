@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 func write(t *testing.T, path, content string) {

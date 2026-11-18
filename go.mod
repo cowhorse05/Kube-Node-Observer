@@ -1,4 +1,4 @@
-module github.com/cowhorse05/KubeNode-Observer
+module github.com/cowhorse05/Kube-Node-Observer
 
 go 1.22.0
 

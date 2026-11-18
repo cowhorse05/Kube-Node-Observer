@@ -15,8 +15,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/agent"
-	"github.com/cowhorse05/KubeNode-Observer/internal/topology"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/agent"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/topology"
 )
 
 const (

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/cowhorse05/KubeNode-Observer/internal/clockdomain"
+	"github.com/cowhorse05/Kube-Node-Observer/internal/clockdomain"
 )
 
 const ClockPath = "/api/v1/guest/clock"

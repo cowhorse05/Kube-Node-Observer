@@ -1,5 +1,5 @@
 package guest
 
-import "github.com/cowhorse05/KubeNode-Observer/internal/clockdomain"
+import "github.com/cowhorse05/Kube-Node-Observer/internal/clockdomain"
 
 type LinuxClock = clockdomain.LinuxClock
